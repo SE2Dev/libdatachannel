@@ -8,7 +8,15 @@
 		// Use Debian 11, Ubuntu 18.04 or Ubuntu 22.04 on local arm64/Apple Silicon
 		"args": { "VARIANT": "debian-11" }
 	},
-	"runArgs": ["--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined"],
+	"runArgs": [
+		"--cap-add=SYS_PTRACE",
+		"--security-opt",
+		"seccomp=unconfined",
+		// X11 forwarding
+		// "--net", "host",
+        "-e", "DISPLAY=${env:DISPLAY}",
+        "-v", "/tmp/.X11-unix:/tmp/.X11-unix"
+	],
 
 	// Configure tool-specific properties.
 	"customizations": {
