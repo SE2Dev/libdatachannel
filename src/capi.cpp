@@ -622,6 +622,26 @@ int rtcGetMaxDataChannelStream(int pc) {
 	});
 }
 
+int rtcSendMedia(int pc, const char *data, int size) {
+	return wrap([&] {
+		auto peerConnection = getPeerConnection(pc);
+
+		if (!data && size != 0)
+			throw std::invalid_argument("Unexpected null pointer for data");
+
+		if (size >= 0) {
+			auto b = reinterpret_cast<const byte *>(data);
+			peerConnection->sendMedia(binary(b, b + size));
+			return size;
+		} else {
+			string str(data);
+			int len = int(str.size());
+			peerConnection->sendMedia(std::move(str));
+			return len;
+		}
+	});
+}
+
 int rtcSetOpenCallback(int id, rtcOpenCallbackFunc cb) {
 	return wrap([&] {
 		auto channel = getChannel(id);
