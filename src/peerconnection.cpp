@@ -57,6 +57,10 @@ PeerConnection::~PeerConnection() {
 
 void PeerConnection::close() { impl()->close(); }
 
+bool PeerConnection::sendMedia(message_variant data) { return impl()->sendMedia(make_message(std::move(data))); }
+
+bool PeerConnection::sendMedia(const byte *data, size_t size) { return sendMedia(binary(data, data + size)); }
+
 const Configuration *PeerConnection::config() const { return &impl()->config; }
 
 PeerConnection::State PeerConnection::state() const { return impl()->state; }

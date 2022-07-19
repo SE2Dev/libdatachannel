@@ -76,6 +76,9 @@ public:
 
 	void close();
 
+	bool sendMedia(message_variant data);
+	bool sendMedia(const byte *data, size_t size);
+
 	const Configuration *config() const;
 	State state() const;
 	GatheringState gatheringState() const;

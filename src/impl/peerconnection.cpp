@@ -90,6 +90,16 @@ void PeerConnection::close() {
 	closeTransports();
 }
 
+bool PeerConnection::sendMedia(message_ptr message) {
+#if RTC_ENABLE_MEDIA
+	if (auto transport = std::atomic_load(&mDtlsTransport)) {
+		auto srtpTransport = std::dynamic_pointer_cast<DtlsSrtpTransport>(transport);
+		return srtpTransport->send(message);
+	}
+#endif
+	return false;
+}
+
 optional<Description> PeerConnection::localDescription() const {
 	std::lock_guard lock(mLocalDescriptionMutex);
 	return mLocalDescription;

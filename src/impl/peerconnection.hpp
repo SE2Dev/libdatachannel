@@ -47,6 +47,8 @@ struct PeerConnection : std::enable_shared_from_this<PeerConnection> {
 
 	void close();
 
+	bool sendMedia(message_ptr message);
+
 	optional<Description> localDescription() const;
 	optional<Description> remoteDescription() const;
 	size_t remoteMaxMessageSize() const;
