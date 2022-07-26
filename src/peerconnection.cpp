@@ -146,6 +146,10 @@ void PeerConnection::setLocalDescription(Description::Type type) {
 	if (!iceTransport)
 		return; // closed
 
+	if(state() == PeerConnection::State::Closed) {
+		PLOG_ERROR << "Trying to process description on closed peer conn";
+	}
+
 	Description local = iceTransport->getLocalDescription(type);
 	impl()->processLocalDescription(std::move(local));
 

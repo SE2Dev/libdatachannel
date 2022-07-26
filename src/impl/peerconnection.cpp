@@ -74,12 +74,12 @@ PeerConnection::PeerConnection(Configuration config_)
 }
 
 PeerConnection::~PeerConnection() {
-	PLOG_VERBOSE << "Destroying PeerConnection";
+	PLOG_DEBUG << "Destroying PeerConnection " << this;
 	mProcessor.join();
 }
 
 void PeerConnection::close() {
-	PLOG_VERBOSE << "Closing PeerConnection";
+	PLOG_DEBUG << "Closing PeerConnection " << this;
 
 	negotiationNeeded = false;
 
@@ -960,6 +960,10 @@ void PeerConnection::processLocalDescription(Description description) {
 
 		mLocalDescription.emplace(description);
 		mLocalDescription->addCandidates(std::move(existingCandidates));
+	}
+
+	if(this->state == PeerConnection::State::Closed) {
+		PLOG_ERROR << "Trying to enqueue description callback on closed peer conn";
 	}
 
 	mProcessor.enqueue(&PeerConnection::trigger<Description>, shared_from_this(),
