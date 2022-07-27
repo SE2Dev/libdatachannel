@@ -851,7 +851,8 @@ void PeerConnection::processLocalDescription(Description description) {
 					        if (auto track = it->second.lock()) {
 						        auto media = track->description();
 
-						        PLOG_DEBUG << "Adding media to local description, mid=\""
+						        PLOG_DEBUG << "[PC " << this << "] "
+						                   << "Adding media to local description, mid=\""
 						                   << media.mid() << "\", removed=" << std::boolalpha
 						                   << media.isRemoved();
 
@@ -861,7 +862,8 @@ void PeerConnection::processLocalDescription(Description description) {
 						        auto reciprocated = remoteMedia->reciprocate();
 						        reciprocated.markRemoved();
 
-						        PLOG_DEBUG << "Adding media to local description, mid=\""
+						        PLOG_DEBUG << "[PC " << this << "] "
+						                   << "Adding media to local description, mid=\""
 						                   << reciprocated.mid()
 						                   << "\", removed=true (track is destroyed)";
 
@@ -962,8 +964,9 @@ void PeerConnection::processLocalDescription(Description description) {
 		mLocalDescription->addCandidates(std::move(existingCandidates));
 	}
 
-	if(this->state == PeerConnection::State::Closed) {
-		PLOG_ERROR << "Trying to enqueue description callback on closed peer conn";
+	if (this->state == PeerConnection::State::Closed) {
+		PLOG_ERROR << "[PC " << this << "] "
+		           << "Trying to enqueue description callback on closed peer conn";
 	}
 
 	mProcessor.enqueue(&PeerConnection::trigger<Description>, shared_from_this(),
@@ -1133,7 +1136,8 @@ bool PeerConnection::changeState(State newState) {
 
 	std::ostringstream s;
 	s << newState;
-	PLOG_INFO << "Changed state to " << s.str();
+	PLOG_INFO << "[PC " << this << "] "
+	          << "Changed state to " << s.str();
 
 	if (newState == State::Closed) {
 		auto callback = std::move(stateChangeCallback); // steal the callback

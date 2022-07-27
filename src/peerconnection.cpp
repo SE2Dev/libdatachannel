@@ -84,7 +84,8 @@ bool PeerConnection::hasMedia() const {
 
 void PeerConnection::setLocalDescription(Description::Type type) {
 	std::unique_lock signalingLock(impl()->signalingMutex);
-	PLOG_VERBOSE << "Setting local description, type=" << Description::typeToString(type);
+	PLOG_DEBUG << "[PC " << impl().get() << "] "
+	           << "Setting local description, type=" << Description::typeToString(type);
 
 	SignalingState signalingState = impl()->signalingState.load();
 	if (type == Description::Type::Rollback) {
@@ -146,8 +147,9 @@ void PeerConnection::setLocalDescription(Description::Type type) {
 	if (!iceTransport)
 		return; // closed
 
-	if(state() == PeerConnection::State::Closed) {
-		PLOG_ERROR << "Trying to process description on closed peer conn";
+	if (state() == PeerConnection::State::Closed) {
+		PLOG_ERROR << "[PC " << impl().get() << "] "
+		           << "Trying to process description on closed peer conn";
 	}
 
 	Description local = iceTransport->getLocalDescription(type);
