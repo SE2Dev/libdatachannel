@@ -210,6 +210,7 @@ int test_capi_connectivity_main() {
 	config1.iceServersCount = 1;
 	// Custom MTU example
 	config1.mtu = 1500;
+	config1.enableIceUdpMux = true;
 
 	peer1 = createPeer(&config1);
 	if (!peer1)
@@ -227,6 +228,7 @@ int test_capi_connectivity_main() {
 	// Port range example
 	config2.portRangeBegin = 5000;
 	config2.portRangeEnd = 6000;
+	config2.enableIceUdpMux = true;
 
 	peer2 = createPeer(&config2);
 	if (!peer2)
